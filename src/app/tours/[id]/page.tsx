@@ -115,6 +115,9 @@ export default function TourPage({ params }: { params: Promise<{ id: string }> }
     );
   }
 
+  // At this point tour is guaranteed to be defined
+  if (!tour) return null;
+
   const buildMailto = (form: FormData) => {
     const name = form.get("name") as string;
     const email = form.get("email") as string;
