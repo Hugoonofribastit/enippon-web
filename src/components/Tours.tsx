@@ -87,24 +87,30 @@ export default function Tours() {
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {seasonalTours.map((tour) => (
-              <div
+              <Link
                 key={tour.id}
-                className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-all"
+                href={`/tours/${tour.id}`}
+                className="group bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl transition-all hover:-translate-y-1"
               >
-                <span className="text-xs font-semibold px-3 py-1 bg-[var(--color-accent)]/20 text-[var(--color-accent)] rounded-full">
-                  {tour.type[locale]}
-                </span>
-                <h4 className="text-lg font-bold mt-3 mb-2">{tour.name[locale]}</h4>
-                <p className="text-gray-500 text-sm mb-4 leading-relaxed">
-                  {tour.description[locale]}
-                </p>
-                <a
-                  href={`mailto:info@enippontours.com?subject=${encodeURIComponent(tour.name[locale])}`}
-                  className="text-[var(--color-primary)] text-sm font-semibold hover:underline"
-                >
-                  {t.tours.contactForDates} →
-                </a>
-              </div>
+                <div className="relative h-48 overflow-hidden">
+                  <Image
+                    src={tour.image}
+                    alt={tour.name[locale]}
+                    fill
+                    className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
+                  <span className="absolute bottom-3 left-4 text-xs font-semibold px-3 py-1 bg-white/20 backdrop-blur-sm text-white rounded-full">
+                    {tour.type[locale]}
+                  </span>
+                </div>
+                <div className="p-6">
+                  <h4 className="text-lg font-bold mb-3 group-hover:text-[var(--color-primary)] transition-colors">{tour.name[locale]}</h4>
+                  <span className="px-4 py-1.5 bg-[var(--color-primary)] text-white text-sm font-semibold rounded-full group-hover:bg-[var(--color-primary-dark)] transition-colors">
+                    {t.tours.details}
+                  </span>
+                </div>
+              </Link>
             ))}
           </div>
         </div>
