@@ -1,9 +1,20 @@
 "use client";
 
+import { useState, useMemo } from "react";
+import Link from "next/link";
 import { useLanguage } from "@/lib/LanguageContext";
 
 export default function PlanYourTrip() {
   const { locale, t } = useLanguage();
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
+  const [captchaAnswer, setCaptchaAnswer] = useState("");
+  const [captchaError, setCaptchaError] = useState(false);
+
+  const captcha = useMemo(() => {
+    const a = Math.floor(Math.random() * 9) + 1;
+    const b = Math.floor(Math.random() * 9) + 1;
+    return { a, b, result: a + b };
+  }, []);
 
   const icons = [
     <svg key="0" className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>,
@@ -30,6 +41,16 @@ export default function PlanYourTrip() {
     window.location.href = `mailto:info@enippontours.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (parseInt(captchaAnswer) !== captcha.result) {
+      setCaptchaError(true);
+      return;
+    }
+    setCaptchaError(false);
+    buildMailto(new FormData(e.currentTarget));
+  };
+
   return (
     <section id="plan" className="py-20 md:py-28 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -44,7 +65,7 @@ export default function PlanYourTrip() {
           <p className="text-gray-600 leading-relaxed">{t.plan.intro}</p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mb-20">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mb-12">
           {t.plan.services.map((service, i) => (
             <div key={i} className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-all">
               <div className="w-11 h-11 rounded-xl bg-[var(--color-primary)]/10 text-[var(--color-primary)] flex items-center justify-center mb-3">
@@ -56,16 +77,30 @@ export default function PlanYourTrip() {
           ))}
         </div>
 
+        {/* Scope / Important notes */}
+        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 md:p-8 mb-20">
+          <h3 className="font-bold text-amber-800 text-lg mb-3">{t.plan.scopeTitle}</h3>
+          <p className="text-amber-700 leading-relaxed mb-4">{t.plan.scopeText}</p>
+          <p className="text-amber-800 font-semibold text-sm mb-2">
+            {locale === "es" ? "No incluye:" : "Does not include:"}
+          </p>
+          <ul className="space-y-2">
+            {t.plan.scopeExcludes.map((item, i) => (
+              <li key={i} className="text-amber-700 flex items-start gap-2 text-sm">
+                <span className="text-amber-500 mt-0.5">✕</span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
         <div className="max-w-2xl mx-auto">
           <div className="text-center mb-8">
             <h3 className="text-2xl md:text-3xl font-bold mb-2">{t.plan.formTitle}</h3>
             <p className="text-gray-600">{t.plan.formSubtitle}</p>
           </div>
           <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              buildMailto(new FormData(e.currentTarget));
-            }}
+            onSubmit={handleSubmit}
             className="space-y-4 bg-[var(--color-muted)] rounded-3xl p-6 md:p-10"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -84,6 +119,51 @@ export default function PlanYourTrip() {
             <input name="destinations" placeholder={t.plan.form.destinations} className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20 outline-none transition-all text-sm" />
             <input name="budget" placeholder={t.plan.form.budget} className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20 outline-none transition-all text-sm" />
             <textarea name="message" rows={4} placeholder={t.plan.form.message} className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20 outline-none transition-all text-sm resize-none" />
+
+            {/* Honeypot (hidden anti-bot field) */}
+            <div className="absolute -left-[9999px]" aria-hidden="true">
+              <input type="text" name="website" tabIndex={-1} autoComplete="off" />
+            </div>
+
+            {/* Math CAPTCHA */}
+            <div className="bg-white rounded-xl border border-gray-200 p-4">
+              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+                {t.plan.form.captchaLabel}
+              </label>
+              <div className="flex items-center gap-3">
+                <span className="text-sm font-medium text-gray-700">
+                  {captcha.a} + {captcha.b} =
+                </span>
+                <input
+                  type="number"
+                  value={captchaAnswer}
+                  onChange={(e) => { setCaptchaAnswer(e.target.value); setCaptchaError(false); }}
+                  required
+                  className={`w-20 px-3 py-2 rounded-lg border text-sm text-center outline-none transition-all ${captchaError ? "border-red-400 bg-red-50 focus:ring-red-200" : "border-gray-200 bg-white focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]/20"} focus:ring-2`}
+                />
+                {captchaError && (
+                  <span className="text-red-500 text-xs">{t.plan.form.captchaError}</span>
+                )}
+              </div>
+            </div>
+
+            {/* Privacy policy checkbox */}
+            <label className="flex items-start gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                required
+                checked={privacyAccepted}
+                onChange={(e) => setPrivacyAccepted(e.target.checked)}
+                className="mt-0.5 w-4 h-4 rounded border-gray-300 text-[var(--color-primary)] focus:ring-[var(--color-primary)]"
+              />
+              <span className="text-sm text-gray-600">
+                {t.plan.form.privacy}{" "}
+                <Link href="/terms" target="_blank" className="text-[var(--color-primary)] underline hover:text-[var(--color-primary-dark)]">
+                  {t.plan.form.privacyLink}
+                </Link>
+              </span>
+            </label>
+
             <button
               type="submit"
               className="w-full py-3.5 bg-[var(--color-primary)] text-white font-semibold rounded-xl hover:bg-[var(--color-primary-dark)] transition-colors shadow-lg shadow-[var(--color-primary)]/20 text-base"

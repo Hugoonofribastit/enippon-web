@@ -6,6 +6,7 @@ export interface TourStop {
 export interface Tour {
   id: string;
   image: string;
+  images?: string[];
   name: { es: string; en: string };
   duration: string;
   startTime: string;
@@ -37,7 +38,7 @@ export const tours: Tour[] = [
     image: "/tours/create.jpg",
     name: { es: "Tour Personalizado por Tokio", en: "Custom Tokyo Tour" },
     duration: "2 / 6 / 8",
-    startTime: "9:00 AM",
+    startTime: "-",
     meetingPoint: { es: "Entrada de su hotel", en: "Hotel entrance" },
     transportCost: "-",
     shortDescription: {
@@ -45,8 +46,8 @@ export const tours: Tour[] = [
       en: "Design your own tour choosing from different Tokyo destinations, according to your time and pace.",
     },
     description: {
-      es: "Diseña tu propio tour personalizado eligiendo entre distintos destinos de Tokio, pensado según tu tiempo, tu ritmo y el tipo de experiencia que buscas. Elige los destinos que coincidan con tus intereses y haz que tu experiencia en Tokio sea verdaderamente tuya.",
-      en: "Design your own customized tour choosing from different Tokyo destinations, tailored to your time, pace, and the type of experience you're looking for. Choose destinations that match your interests and make your Tokyo experience truly yours.",
+      es: "Diseña tu propio tour personalizado eligiendo entre distintos destinos de Tokio, pensado según tu tiempo, tu ritmo y el tipo de experiencia que buscas. Elige los destinos que coincidan con tus intereses y haz que tu experiencia en Tokio sea verdaderamente tuya.\n\nTambién podemos diseñar experiencias enfocadas en el Japón tradicional menos visible: templos y santuarios apartados en zonas de montaña, festividades locales que conservan siglos de historia, así como celebraciones estacionales que reflejan el calendario cultural japonés.\n\nDentro del tiempo disponible (2, 6 u 8 horas) el tour puede centrarse en una temática concreta e incluir encuentros con artesanos, espacios dedicados a oficios tradicionales, gastronomía regional fuera del circuito comercial o pequeñas comunidades donde la identidad local se mantiene vigente.",
+      en: "Design your own customized tour choosing from different Tokyo destinations, tailored to your time, pace, and the type of experience you're looking for. Choose destinations that match your interests and make your Tokyo experience truly yours.\n\nWe can also design experiences focused on the less visible traditional Japan: secluded temples and shrines in mountain areas, local festivities that preserve centuries of history, as well as seasonal celebrations that reflect the Japanese cultural calendar.\n\nWithin the available time (2, 6, or 8 hours) the tour can focus on a specific theme and include encounters with artisans, spaces dedicated to traditional crafts, regional gastronomy off the commercial circuit, or small communities where local identity remains alive.",
     },
     highlights: {
       es: ["Ginza", "Akihabara", "Shinjuku", "Shibuya", "Harajuku", "Asakusa", "Ueno", "Odaiba", "Ikebukuro"],
@@ -73,13 +74,13 @@ export const tours: Tour[] = [
     },
     details: {
       es: [
-        "El tour comienza a las 9:00 AM en la entrada de su hotel o lugar de alojamiento.",
+        "El tour comienza en la entrada de su hotel o lugar de alojamiento. El horario de inicio se acuerda previamente.",
         "El recorrido se realiza caminando y utilizando transporte público.",
         "El transporte no está incluido en el costo del tour.",
         "Tickets, pases, comidas y bebidas no están incluidos en el precio del tour y corren por cuenta del cliente.",
       ],
       en: [
-        "The tour starts at 9:00 AM at your hotel or accommodation entrance.",
+        "The tour starts at your hotel or accommodation entrance. The start time is agreed upon in advance.",
         "The tour is conducted by walking and using public transport.",
         "Transport is not included in the tour cost.",
         "Tickets, passes, meals and drinks are not included in the tour price and are at the client's expense.",
@@ -271,7 +272,7 @@ export const tours: Tour[] = [
     duration: "8", startTime: "8:00 AM",
     meetingPoint: { es: "Estación de Shinjuku", en: "Shinjuku Station" },
     transportCost: "¥12,000",
-    shortDescription: { es: "Templos Patrimonio UNESCO, naturaleza impresionante e historia del shogunato Tokugawa.", en: "UNESCO Heritage temples, stunning nature and Tokugawa shogunate history." },
+    shortDescription: { es: "Templos declarados Patrimonio de la Humanidad por la UNESCO, naturaleza imponente y legado histórico del shogunato.", en: "Temples declared UNESCO World Heritage Sites, imposing nature and the historical legacy of the shogunate." },
     description: { es: "Explora la impresionante belleza y la rica historia de Nikkō en este tour de un día lleno de experiencias. Conocida por sus sagrados templos y santuarios declarados Patrimonio de la Humanidad por la UNESCO, así como por sus espectaculares paisajes naturales, Nikkō ofrece una escapada perfecta al corazón espiritual e histórico de Japón.", en: "Explore the stunning beauty and rich history of Nikkō on this experience-filled day tour. Known for its sacred UNESCO World Heritage temples and shrines, as well as its spectacular natural landscapes, Nikkō offers a perfect escape to the spiritual and historic heart of Japan." },
     highlights: { es: ["Puente Shinkyō", "Templo Rinnō-ji", "Santuario Tōshō-gū", "Templo Futarasan", "Mausoleo Taiyūin"], en: ["Shinkyō Bridge", "Rinnō-ji Temple", "Tōshō-gū Shrine", "Futarasan Temple", "Taiyūin Mausoleum"] },
     itinerary: [
@@ -312,7 +313,7 @@ export const tours: Tour[] = [
     name: { es: "Hakone Tour", en: "Hakone Tour" },
     duration: "8", startTime: "8:00 AM",
     meetingPoint: { es: "Estación de Shinjuku", en: "Shinjuku Station" },
-    transportCost: "¥6,100",
+    transportCost: "¥7,100",
     shortDescription: { es: "Naturaleza, aguas termales y las vistas más emblemáticas del Monte Fuji.", en: "Nature, hot springs and the most iconic views of Mount Fuji." },
     description: { es: "El Hakone Tour es la elección ideal para quienes desean condensar naturaleza, relax y cultura en una sola jornada. Un recorrido armonioso entre paisajes volcánicos, aguas termales y algunas de las vistas más emblemáticas del Monte Fuji.", en: "The Hakone Tour is the ideal choice for those who want to condense nature, relaxation and culture into a single day. A harmonious tour through volcanic landscapes, hot springs and some of the most iconic views of Mount Fuji." },
     highlights: { es: ["Onsen de pies", "Hakone Ropeway & Ōwakudani", "Lago Ashi & Barco pirata", "Santuario Hakone"], en: ["Foot onsen", "Hakone Ropeway & Ōwakudani", "Lake Ashi & Pirate ship", "Hakone Shrine"] },
@@ -324,7 +325,7 @@ export const tours: Tour[] = [
     ],
     notes: { es: ["El Hakone Tour es una experiencia privada, individual o grupal, para 1 a 5 personas.", "El precio corresponde al grupo completo, no por persona.", "Por cada persona adicional de 13 años en adelante, se aplica un costo extra de 10.000 yenes.", "Para personas adicionales de 6 a 12 años, el costo es de 5.000 yenes por persona.", "Los menores de 6 años no tienen costo como personas adicionales."], en: ["The Hakone Tour is a private experience for 1 to 5 people.", "The price is for the entire group, not per person.", "For each additional person aged 13+, an extra cost of 10,000 yen applies.", "For additional people aged 6-12, the cost is 5,000 yen per person.", "Children under 6 are free as additional participants."] },
     details: { es: ["El tour comienza a las 8:00 AM. Punto de encuentro: Estación de Shinjuku.", "El recorrido se realiza caminando y utilizando transporte público.", "El transporte no está incluido.", "Tickets, pases, comidas y bebidas no están incluidos."], en: ["Tour starts at 8:00 AM. Meeting point: Shinjuku Station.", "Walking and public transport.", "Transport is not included.", "Tickets, passes, meals and drinks are not included."] },
-    extraCosts: { es: ["Pase y transporte: 6,100 yenes aproximadamente por persona."], en: ["Pass and transport: approximately 6,100 yen per person."] },
+    extraCosts: { es: ["Pase y transporte: 7,100 yenes aproximadamente por persona."], en: ["Pass and transport: approximately 7,100 yen per person."] },
     priceType: "group", maxPeople: 5,
   },
   {

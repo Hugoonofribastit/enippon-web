@@ -3,6 +3,46 @@
 import { useState } from "react";
 import { useLanguage } from "@/lib/LanguageContext";
 
+function FaqAnswer({ text }: { text: string }) {
+  const lines = text.split("\n");
+  const elements: React.ReactNode[] = [];
+  let bulletGroup: string[] = [];
+
+  const flushBullets = () => {
+    if (bulletGroup.length > 0) {
+      elements.push(
+        <ul key={`ul-${elements.length}`} className="mt-2 mb-2 space-y-1.5 pl-1">
+          {bulletGroup.map((b, j) => (
+            <li key={j} className="flex items-start gap-2">
+              <span className="text-[var(--color-primary)] mt-0.5 flex-shrink-0">●</span>
+              <span>{b}</span>
+            </li>
+          ))}
+        </ul>
+      );
+      bulletGroup = [];
+    }
+  };
+
+  lines.forEach((line, i) => {
+    if (line.startsWith("● ") || line.startsWith("●")) {
+      bulletGroup.push(line.replace(/^●\s*/, ""));
+    } else {
+      flushBullets();
+      if (line.trim()) {
+        elements.push(
+          <p key={`p-${i}`} className={elements.length > 0 ? "mt-2" : ""}>
+            {line}
+          </p>
+        );
+      }
+    }
+  });
+  flushBullets();
+
+  return <>{elements}</>;
+}
+
 export default function FAQ() {
   const { t } = useLanguage();
   const [open, setOpen] = useState<number | null>(null);
@@ -37,7 +77,7 @@ export default function FAQ() {
               </button>
               {open === i && (
                 <div className="px-5 pb-5 text-gray-600 text-sm leading-relaxed animate-fade-in">
-                  {item.a}
+                  <FaqAnswer text={item.a} />
                 </div>
               )}
             </div>

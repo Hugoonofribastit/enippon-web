@@ -37,7 +37,7 @@ export default function Tours() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
                 <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between">
                   <span className="text-xs font-semibold px-3 py-1 bg-white/20 backdrop-blur-sm text-white rounded-full">
-                    {tour.duration}h &middot; {tour.startTime}
+                    {tour.duration}h{tour.startTime !== "-" && <> &middot; {tour.startTime}</>}
                   </span>
                 </div>
               </div>

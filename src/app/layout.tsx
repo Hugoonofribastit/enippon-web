@@ -16,6 +16,10 @@ export const metadata: Metadata = {
   title: "ENIPPON TOURS | Tours privados y personalizados en Japón",
   description:
     "Vive experiencias auténticas en Japón con tours privados y personalizados. Descubre Tokio, Nikko, Kamakura, Hakone y más con guías locales.",
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+  },
 };
 
 export default function RootLayout({
