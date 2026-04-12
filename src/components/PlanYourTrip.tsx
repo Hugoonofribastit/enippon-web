@@ -1,20 +1,15 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/lib/LanguageContext";
+import SliderCaptcha from "@/components/SliderCaptcha";
 
 export default function PlanYourTrip() {
   const { locale, t } = useLanguage();
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
-  const [captchaAnswer, setCaptchaAnswer] = useState("");
+  const [captchaVerified, setCaptchaVerified] = useState(false);
   const [captchaError, setCaptchaError] = useState(false);
-
-  const captcha = useMemo(() => {
-    const a = Math.floor(Math.random() * 9) + 1;
-    const b = Math.floor(Math.random() * 9) + 1;
-    return { a, b, result: a + b };
-  }, []);
 
   const icons = [
     <svg key="0" className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>,
@@ -43,7 +38,7 @@ export default function PlanYourTrip() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (parseInt(captchaAnswer) !== captcha.result) {
+    if (!captchaVerified) {
       setCaptchaError(true);
       return;
     }
@@ -125,27 +120,14 @@ export default function PlanYourTrip() {
               <input type="text" name="website" tabIndex={-1} autoComplete="off" />
             </div>
 
-            {/* Math CAPTCHA */}
-            <div className="bg-white rounded-xl border border-gray-200 p-4">
-              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
-                {t.plan.form.captchaLabel}
-              </label>
-              <div className="flex items-center gap-3">
-                <span className="text-sm font-medium text-gray-700">
-                  {captcha.a} + {captcha.b} =
-                </span>
-                <input
-                  type="number"
-                  value={captchaAnswer}
-                  onChange={(e) => { setCaptchaAnswer(e.target.value); setCaptchaError(false); }}
-                  required
-                  className={`w-20 px-3 py-2 rounded-lg border text-sm text-center outline-none transition-all ${captchaError ? "border-red-400 bg-red-50 focus:ring-red-200" : "border-gray-200 bg-white focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]/20"} focus:ring-2`}
-                />
-                {captchaError && (
-                  <span className="text-red-500 text-xs">{t.plan.form.captchaError}</span>
-                )}
-              </div>
-            </div>
+            {/* Slider CAPTCHA */}
+            <SliderCaptcha
+              label={t.plan.form.captchaLabel}
+              onVerified={(v) => { setCaptchaVerified(v); setCaptchaError(false); }}
+            />
+            {captchaError && (
+              <p className="text-red-500 text-xs -mt-2">{t.plan.form.captchaError}</p>
+            )}
 
             {/* Privacy policy checkbox */}
             <label className="flex items-start gap-3 cursor-pointer">

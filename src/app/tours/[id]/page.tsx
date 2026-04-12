@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect, useMemo, use, useCallback } from "react";
+import { useState, useEffect, use, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { tours, seasonalTours } from "@/lib/tours";
 import { translations, Locale } from "@/lib/translations";
+import SliderCaptcha from "@/components/SliderCaptcha";
 
 function ImageCarousel({ images, alt }: { images: string[]; alt: string }) {
   const [current, setCurrent] = useState(0);
@@ -71,14 +72,8 @@ export default function TourPage({ params }: { params: Promise<{ id: string }> }
   const seasonal = seasonalTours.find((t) => t.id === id);
 
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
-  const [captchaAnswer, setCaptchaAnswer] = useState("");
+  const [captchaVerified, setCaptchaVerified] = useState(false);
   const [captchaError, setCaptchaError] = useState(false);
-
-  const captcha = useMemo(() => {
-    const a = Math.floor(Math.random() * 9) + 1;
-    const b = Math.floor(Math.random() * 9) + 1;
-    return { a, b, result: a + b };
-  }, []);
 
   if (!tour && !seasonal) {
     return (
@@ -160,7 +155,7 @@ export default function TourPage({ params }: { params: Promise<{ id: string }> }
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                if (parseInt(captchaAnswer) !== captcha.result) {
+                if (!captchaVerified) {
                   setCaptchaError(true);
                   return;
                 }
@@ -198,27 +193,14 @@ export default function TourPage({ params }: { params: Promise<{ id: string }> }
                 <input type="text" name="website" tabIndex={-1} autoComplete="off" />
               </div>
 
-              {/* Math CAPTCHA */}
-              <div className="bg-white rounded-xl border border-gray-200 p-4">
-                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
-                  {t.form.captchaLabel}
-                </label>
-                <div className="flex items-center gap-3">
-                  <span className="text-sm font-medium text-gray-700">
-                    {captcha.a} + {captcha.b} =
-                  </span>
-                  <input
-                    type="number"
-                    value={captchaAnswer}
-                    onChange={(e) => { setCaptchaAnswer(e.target.value); setCaptchaError(false); }}
-                    required
-                    className={`w-20 px-3 py-2 rounded-lg border text-sm text-center outline-none transition-all ${captchaError ? "border-red-400 bg-red-50 focus:ring-red-200" : "border-gray-200 bg-white focus:border-[#c41e3a] focus:ring-[#c41e3a]/20"} focus:ring-2`}
-                  />
-                  {captchaError && (
-                    <span className="text-red-500 text-xs">{t.form.captchaError}</span>
-                  )}
-                </div>
-              </div>
+              {/* Slider CAPTCHA */}
+              <SliderCaptcha
+                label={t.form.captchaLabel}
+                onVerified={(v) => { setCaptchaVerified(v); setCaptchaError(false); }}
+              />
+              {captchaError && (
+                <p className="text-red-500 text-xs -mt-2">{t.form.captchaError}</p>
+              )}
 
               {/* Privacy policy */}
               <label className="flex items-start gap-3 cursor-pointer">
@@ -284,7 +266,7 @@ export default function TourPage({ params }: { params: Promise<{ id: string }> }
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (parseInt(captchaAnswer) !== captcha.result) {
+    if (!captchaVerified) {
       setCaptchaError(true);
       return;
     }
@@ -513,27 +495,14 @@ ${message}`;
               <input type="text" name="website" tabIndex={-1} autoComplete="off" />
             </div>
 
-            {/* Math CAPTCHA */}
-            <div className="bg-white rounded-xl border border-gray-200 p-4">
-              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
-                {t.form.captchaLabel}
-              </label>
-              <div className="flex items-center gap-3">
-                <span className="text-sm font-medium text-gray-700">
-                  {captcha.a} + {captcha.b} =
-                </span>
-                <input
-                  type="number"
-                  value={captchaAnswer}
-                  onChange={(e) => { setCaptchaAnswer(e.target.value); setCaptchaError(false); }}
-                  required
-                  className={`w-20 px-3 py-2 rounded-lg border text-sm text-center outline-none transition-all ${captchaError ? "border-red-400 bg-red-50 focus:ring-red-200" : "border-gray-200 bg-white focus:border-[#c41e3a] focus:ring-[#c41e3a]/20"} focus:ring-2`}
-                />
-                {captchaError && (
-                  <span className="text-red-500 text-xs">{t.form.captchaError}</span>
-                )}
-              </div>
-            </div>
+            {/* Slider CAPTCHA */}
+            <SliderCaptcha
+              label={t.form.captchaLabel}
+              onVerified={(v) => { setCaptchaVerified(v); setCaptchaError(false); }}
+            />
+            {captchaError && (
+              <p className="text-red-500 text-xs -mt-2">{t.form.captchaError}</p>
+            )}
 
             {/* Privacy policy */}
             <label className="flex items-start gap-3 cursor-pointer">
